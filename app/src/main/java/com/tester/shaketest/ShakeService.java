@@ -10,6 +10,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Handler;
 import android.os.IBinder;
+import android.widget.Toast;
+
 import java.util.Random;
 import androidx.annotation.Nullable;
 
@@ -57,7 +59,14 @@ public class ShakeService extends Service implements SensorEventListener {
             //生成亂數物件
             Random random0 = new Random();
             //隨機產生顏色的設定值
-            int color0 = Color.argb(255, random0.nextInt(256), random0.nextInt(256), random0.nextInt(256));
+            int valueR = random0.nextInt(256);
+            int valueG = random0.nextInt(256);
+            int valueB = random0.nextInt(256);
+            String valueRed = Integer.toString(valueR);
+            String valueGreen = Integer.toString(valueG);
+            String valueBlue = Integer.toString(valueB);
+            int color0 = Color.argb(255, valueR, valueG,valueB);
+            Toast.makeText(this,"本背景的RGB值為：("+valueRed+","+valueGreen+","+valueBlue+")",Toast.LENGTH_SHORT).show();
             //套用進背景設定
             MainActivity.square.setBackgroundColor(color0);
         }
