@@ -42,20 +42,21 @@ public class ShakeService extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
 
-        //取得x、y、z方向的數據
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
+        //取得x、y、z方向的位移量(delta x、delta y、delta z)
+        float deltaX = event.values[0];
+        float deltaY = event.values[1];
+        float deltaZ = event.values[2];
         //如果是第一次啟動，先把「上次量測的加速度」套用目前量測的結果
         accelerationLast0 = accelerationCurrent0;
-        //取得當前的加速度
-        accelerationCurrent0 = (float) Math.sqrt((double) (x * x + y * y + z * z));
+        //取得當前的加速度(如感應器取樣間隔很短時，可約略視為等加速度運動，因此總位移距離1/2 a t^2 = (delta x)^2+(delta y)^2+(delta z)^2
+        //移項後為1/2 a = (deltaX/t)^2+(deltaY/t)^2+(deltaZ/t)^2->Vx^2+Vy^2+Vz^2
+        accelerationCurrent0 = (float) Math.sqrt((double) (Math.pow(deltaX,2) + Math.pow(deltaY,2) + Math.pow(deltaZ,2)));
         //取得本次與前一次量測結果的差值
         float delta = accelerationCurrent0 - accelerationLast0;
-        //經驗公式？
+        //高通濾波器
         acceleration0 = acceleration0 * 0.9f + delta;
         //觸發的條件
-        if (acceleration0 > 10) {
+        if (acceleration0 > 10) {//地表附近重力加速度g約為9.8 m/(s^2)
             //生成亂數物件
             Random random0 = new Random();
             //隨機產生顏色的設定值
