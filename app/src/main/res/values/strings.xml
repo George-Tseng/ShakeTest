@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ShakeTest</string>
+    <string name="txt">請搖晃螢幕</string>
+</resources>
